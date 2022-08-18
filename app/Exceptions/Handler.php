@@ -54,28 +54,25 @@ class Handler extends ExceptionHandler
 
     public function handleException($request, \Exception $e)
     {
-        if ($e instanceof NotFoundHttpException)
-        {
-            if ($e->getMessage() == "No query results for model [App\\Models\\User].")
-            {
-                return $this->responseError('User not found', Response::HTTP_CONFLICT);
+        if ($request->route() && $request->route()->getPrefix() && $request->route()->getPrefix() === 'api') {
+            if ($e instanceof NotFoundHttpException) {
+                if ($e->getMessage() == "No query results for model [App\\Models\\User].") {
+                    return $this->responseError('User not found', Response::HTTP_CONFLICT);
+                }
+                return $this->responseError($e->getMessage(), Response::HTTP_NOT_FOUND);
             }
-            return $this->responseError($e->getMessage(), Response::HTTP_NOT_FOUND);
-        }
 
-        if ($e instanceof ValidationException)
-        {
-            return $this->responseError($e->getMessage(), Response::HTTP_BAD_REQUEST, $this->getCustomErrorMessage($e->errors()));
-        }
+            if ($e instanceof ValidationException) {
+                return $this->responseError($e->getMessage(), Response::HTTP_BAD_REQUEST, $this->getCustomErrorMessage($e->errors()));
+            }
 
-        if ($e instanceof RouteNotFoundException)
-        {
-            return $this->responseError('Not Authenticated', Response::HTTP_UNAUTHORIZED);
-        }
+            if ($e instanceof RouteNotFoundException) {
+                return $this->responseError('Not Authenticated', Response::HTTP_UNAUTHORIZED);
+            }
 
-        if ($e instanceof CustomException)
-        {
-            return $this->responseError($e->getMessage(), $e->getCode());
+            if ($e instanceof CustomException) {
+                return $this->responseError($e->getMessage(), $e->getCode());
+            }
         }
     }
 

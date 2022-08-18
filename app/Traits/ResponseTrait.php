@@ -16,6 +16,24 @@ trait ResponseTrait
         ]);
     }
 
+    public function responseSuccessWithPaginate($message = 'successful', $data = []): JsonResponse
+    {
+        return response()->json([
+            'code'  => Response::HTTP_OK,
+            'message' => $message,
+            'data' => $data,
+            'links' => [
+                'total' => $data->total(),
+                'perPage' => $data->perPage(),
+                'currentPage' => $data->currentPage(),
+                'pageName' => $data->getPageName(),
+                'path' => $data->path(),
+                'lastPage' => $data->lastPage(),
+                'nextPageUrl' => $data->nextPageUrl(),
+            ]
+        ]);
+    }
+
     public function responseCreated($data = []): JsonResponse
     {
         return response()->json([

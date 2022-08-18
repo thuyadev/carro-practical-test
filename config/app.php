@@ -196,6 +196,8 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         \App\Providers\UserServiceProvider::class,
+        \App\Providers\ContactFormServiceProvider::class,
+        \App\Providers\ContactUserServiceProvider::class,
 
     ],
 

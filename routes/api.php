@@ -16,8 +16,12 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('register', [\App\Http\Controllers\Api\V1\User\AuthController::class, 'register']);
 Route::post('login', [\App\Http\Controllers\Api\V1\User\AuthController::class, 'login']);
-Route::post('logout', [\App\Http\Controllers\Api\V1\User\AuthController::class, 'logout']);
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware('auth:sanctum')->group(function () {
+
+    Route::post('logout', [\App\Http\Controllers\Api\V1\User\AuthController::class, 'logout']);
+
+    Route::apiResource('contact-forms', \App\Http\Controllers\Api\V1\ContactForm\ContactFormController::class);
+
+    Route::post('contact-users', [\App\Http\Controllers\Api\V1\ContactUser\ContactUserController::class, 'store']);
 });

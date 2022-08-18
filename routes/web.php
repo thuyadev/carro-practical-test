@@ -17,8 +17,16 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
+Route::middleware('auth')->group(function () {
+    Route::get('/dashboard', [\App\Http\Controllers\Web\ContactFormController::class, 'index'])->name('dashboard');
+
+    Route::resource('contact-forms', \App\Http\Controllers\Web\ContactFormController::class);
+
+    Route::resource('contact-users', \App\Http\Controllers\Web\ContactUserController::class)->except([
+        'create'
+    ]);
+
+    Route::get('contact-users/{contact_form}/create', [\App\Http\Controllers\Web\ContactUserController::class, 'create'])->name('contact-users.create');
+});
 
 require __DIR__.'/auth.php';
